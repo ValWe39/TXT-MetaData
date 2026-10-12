@@ -1,3 +1,3 @@
 # [OUTIL]
 
-Un outil de nettoyage de texte sous format Markdown 100 % local et déterministe.
+Un outil d'extraction de métadonnées à l'aide de l'API Mistral AI.
