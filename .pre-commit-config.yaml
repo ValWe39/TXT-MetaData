@@ -22,9 +22,9 @@ repos:
     rev: v0.16.8
     hooks:
       - id: ruff
-        args: [--fix, --exclude=input/,--exclude=output/,--exclude=Prompts/,--exclude=.vibe/,--exclude=.specify/,--exclude=Licence]
+        args: [--fix, --exclude=input/,--exclude=output/,--exclude=Interne-Dev/,--exclude=.vibe/,--exclude=.specify/,--exclude=Licence]
       - id: ruff-format
-        args: [--exclude=input/,--exclude=output/,--exclude=Prompts/,--exclude=.vibe/,--exclude=.specify/,--exclude=Licence]
+        args: [--exclude=input/,--exclude=output/,--exclude=Interne-Dev/,--exclude=.vibe/,--exclude=.specify/,--exclude=Licence]
 
   # --- Lint Markdown (équivalent du job `lint`) ---
   - repo: https://github.com/DavidAnson/markdownlint-cli2
@@ -38,7 +38,7 @@ repos:
           '**/.specify/memory/**',
           '!**/input/**',
           '!**/output/**',
-          '!**/Prompts/**',
+          '!**/Interne-Dev/**',
           '!**/.vibe/**',
           '!Licence'
         ]

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vérifie la conformité à la constitution de [OUTIL].
+Vérifie la conformité à la constitution de TXT-MetaData.
 Usage:
   python check_constitution.py          # Vérifie tout le repo
   python check_constitution.py --diff HEAD~1  # Vérifie uniquement les modifications
@@ -166,16 +166,32 @@ def check_no_hardcoded_paths(files: set[Path] | None = None) -> list[str]:
 
 
 def check_gitignore_coverage() -> list[str]:
-    """Vérifie que .gitignore couvre les éléments requis."""
+    """Vérifie que .gitignore couvre configs locales et répertoires locaux.
+
+    Le .gitignore fait autorité : aucune liste de noms de dossiers n'est
+    codée en dur. Deux exigences seulement :
+    - `.env` (config locale de secrets, principe I) doit être couvert ;
+    - tout répertoire local non tracké doit être ignoré par .gitignore
+      (untracked = ni commité ni ignoré = violation).
+    """
     errors = []
     gitignore_path = Path(".gitignore")
     if not gitignore_path.exists():
         return ["Le fichier .gitignore est manquant"]
-    gitignore_content = gitignore_path.read_text()
-    required_patterns = [".env", "input/", "output/", "Prompts/", ".vibe/"]
-    for pattern in required_patterns:
-        if pattern not in gitignore_content:
-            errors.append(f".gitignore ne couvre pas : {pattern}")
+    if ".env" not in gitignore_path.read_text():
+        errors.append(".gitignore ne couvre pas : .env")
+
+    result = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=normal"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    for line in result.stdout.splitlines():
+        if line.startswith("??"):
+            entry = line[3:].strip()
+            if entry.endswith("/"):
+                errors.append(f"Répertoire local non ignoré par .gitignore : {entry}")
     return errors
 
 
@@ -201,7 +217,7 @@ def main():
     )
     args = parser.parse_args()
 
-    print("[CONSTITUTION] Verification de la constitution [OUTIL]...")
+    print("[CONSTITUTION] Verification de la constitution TXT-MetaData...")
 
     files_to_check = None
     if args.diff:

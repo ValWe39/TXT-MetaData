@@ -7,7 +7,7 @@ input/
 output/
 
 # Dossiers à ignorer
-Prompts/
+Interne-Dev/
 .vibe/
 
 # Ignorer les sous-dossiers de .specify sauf memory/
