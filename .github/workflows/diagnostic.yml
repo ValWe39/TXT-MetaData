@@ -84,11 +84,11 @@ jobs:
           set -euo pipefail
           pipx install ruff==0.16.8
 
-      - name: Lint Python (exclusions input output Prompts .vibe .specify Licence)
+      - name: Lint Python (exclusions input output Interne-Dev .vibe .specify Licence)
         run: |
           set -euo pipefail
-          ruff check . --exclude input/ --exclude output/ --exclude Prompts/ --exclude .vibe/ --exclude .specify/ --exclude Licence
-          ruff format --check . --exclude input/ --exclude output/ --exclude Prompts/ --exclude .vibe/ --exclude .specify/ --exclude Licence
+          ruff check . --exclude input/ --exclude output/ --exclude Interne-Dev/ --exclude .vibe/ --exclude .specify/ --exclude Licence
+          ruff format --check . --exclude input/ --exclude output/ --exclude Interne-Dev/ --exclude .vibe/ --exclude .specify/ --exclude Licence
 
       - name: Setup Node.js 20
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -98,12 +98,12 @@ jobs:
       - name: Installer markdownlint-cli2 (autorisé par Amendement 2)
         run: npm install -g markdownlint-cli2@0.22.1
 
-      - name: Lint Markdown (exclusions input output Prompts .vibe .github/workflows Licence)
+      - name: Lint Markdown (exclusions input output Interne-Dev .vibe .github/workflows Licence)
         run: |
           markdownlint-cli2 '**/*.md' \
             '!input/**' \
             '!output/**' \
-            '!Prompts/**' \
+            '!Interne-Dev/**' \
             '!.vibe/**' \
             '!.github/workflows/**' \
             '!Licence'
