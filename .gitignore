@@ -1,10 +1,23 @@
 # Variables d'environnement
 .env
 .env.*
+!.env.example
+
+# Compteur d'occurrence : état local de l'outil (FR-024)
+counter.txt
 
 # Dossiers de données input/output
 input/
 output/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+.pytest_cache/
 
 # Dossiers à ignorer
 Interne-Dev/
