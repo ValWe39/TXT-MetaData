@@ -22,13 +22,13 @@ indépendamment.
 
 **Purpose**: initialisation du projet
 
-- [ ] T001 Créer `pyproject.toml` : packaging (`src/` layout), dépendances
+- [x] T001 Créer `pyproject.toml` : packaging (`src/` layout), dépendances
   `mistralai` et `python-dotenv`, dépendances dev `pytest`, point d'entrée
   console `txt-metadata = txt_metadata.__main__:main`
-- [ ] T002 [P] Créer la structure `src/txt_metadata/` (`__init__.py`,
+- [x] T002 [P] Créer la structure `src/txt_metadata/` (`__init__.py`,
   `__main__.py`) et `tests/` (`unit/`, `integration/`) avec `__init__.py` et
   fichiers vides initiaux
-- [ ] T003 [P] Créer `.env.example` à la racine : `MISTRAL_API_KEY=YOUR_API_KEY`
+- [x] T003 [P] Créer `.env.example` à la racine : `MISTRAL_API_KEY=YOUR_API_KEY`
   (placeholder uniquement, constitution I)
 
 ---
@@ -37,21 +37,21 @@ indépendamment.
 
 **Purpose**: socle requis avant toute user story
 
-- [ ] T004 [P] Implémenter le chargement de configuration dans
+- [x] T004 [P] Implémenter le chargement de configuration dans
   `src/txt_metadata/config.py` : lecture `.env` (python-dotenv) puis variable
   d'environnement `MISTRAL_API_KEY` ; absente → message explicite et échec
   rapide avant tout appel réseau (code retour 2) ; jamais de clé loguée ni
   persistée
-- [ ] T005 [P] Implémenter le retry exponentiel dans `src/txt_metadata/retry.py`
+- [x] T005 [P] Implémenter le retry exponentiel dans `src/txt_metadata/retry.py`
   : délai initial paramétrable (défaut 3 s), multiplié par 2 à chaque essai (3,
   6, 12 s), nombre d'essais paramétrable (défaut 3), par appel LLM (FR-019, R3)
-- [ ] T006 [P] Implémenter le compteur d'occurrence dans
+- [x] T006 [P] Implémenter le compteur d'occurrence dans
   `src/txt_metadata/counter.py` : fichier `counter.txt` à la racine du projet
   contenant uniquement le numéro à 4 chiffres ; premier usage 0001, +1 par
   nouveau fichier, cycle 0001…9999 puis 0000 ; écriture atomique (temporaire +
   remplacement) après chaque document ; fichier absent → reprise 0001 ;
   illisible/corrompu → échec rapide, aucune écriture (FR-023 à FR-025, R6)
-- [ ] T007 [P] Créer les entités dans `src/txt_metadata/models.py` :
+- [x] T007 [P] Créer les entités dans `src/txt_metadata/models.py` :
   `MetadataOutput` (7 clés : `Typologie` obligatoire parmi les 9 valeurs
   Article, Rapport, Ouvrage, Cours, Bibliothèque, Extrait, Communiqué,
   Compte-rendu, Autre ; `Auteur(s)` liste de chaînes ; `Titre` chaîne ≤ 150
@@ -59,7 +59,7 @@ indépendamment.
   chaînes), `RunReport` (statuts succès créé / amendé / échec, messages
   d'erreur), `InputDocument`, `Extrait` (head/tail/ marker/is_full_text)
   conformes à data-model.md
-- [ ] T008 [P] Implémenter le nommage et l'écriture des sorties dans
+- [x] T008 [P] Implémenter le nommage et l'écriture des sorties dans
   `src/txt_metadata/output.py` : 8 premiers caractères du nom du fichier
   d'entrée sans extension, espaces → `_`, accents simplifiés (é→e), + `-` +
   numéro 4 chiffres + `.json` ; écriture UTF-8 dans le dossier de sortie (défaut
@@ -80,24 +80,24 @@ dans `output/`, `counter.txt` créé/incrémenté, code retour 0.
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Test d'intégration du parcours fichier unique dans
+- [x] T009 [P] [US1] Test d'intégration du parcours fichier unique dans
   `tests/integration/test_single_file.py` : mock du client LLM, vérifier JSON
   créé, nommage, compteur incrémenté, code retour 0
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implémenter le squelette CLI dans `src/txt_metadata/cli.py` :
+- [x] T010 [US1] Implémenter le squelette CLI dans `src/txt_metadata/cli.py` :
   argparse, un ou plusieurs chemins positionnels, options avec valeurs par
   défaut (small, 25, 3, 3, output, 0), appel du pipeline
-- [ ] T011 [US1] Implémenter l'échantillonnage minimal dans
+- [x] T011 [US1] Implémenter l'échantillonnage minimal dans
   `src/txt_metadata/sampling.py` : lecture UTF-8 (repli sur encodage détecté),
   extrait 20 000 premiers / 16 000 derniers caractères, texte intégral si
   document plus court que la somme des bornes (FR-002, FR-005)
-- [ ] T012 [US1] Implémenter l'appel LLM dans `src/txt_metadata/extract.py` :
+- [x] T012 [US1] Implémenter l'appel LLM dans `src/txt_metadata/extract.py` :
   SDK `mistralai`, `chat/completions` avec `mistral-small-latest`, température
   0, prompt demandant les 7 champs JSON, intégration du retry T005 (FR-014,
   FR-015)
-- [ ] T013 [US1] Orchestrer le pipeline dans `src/txt_metadata/__main__.py` :
+- [x] T013 [US1] Orchestrer le pipeline dans `src/txt_metadata/__main__.py` :
   config → lecture document → échantillonnage → extraction → validation models →
   numérotation counter → écriture output ; codes retour 0/2 ; branchement du
   point d'entrée console
@@ -117,18 +117,18 @@ une phrase est coupée.
 
 ### Tests for User Story 2
 
-- [ ] T014 [P] [US2] Tests unitaires de la hiérarchie de coupure dans
+- [x] T014 [P] [US2] Tests unitaires de la hiérarchie de coupure dans
   `tests/unit/test_sampling.py` : sous-partie, paragraphe, phrase, mot,
   insertion « ... », texte intégral si court
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Implémenter la hiérarchie de préservation des coupures dans
+- [x] T015 [US2] Implémenter la hiérarchie de préservation des coupures dans
   `src/txt_metadata/sampling.py` : reculer la coupure vers l'unité la plus large
   sous la borne — sous-partie (titre markdown), à défaut paragraphe (double saut
   de ligne), à défaut phrase (ponctuation finale), à défaut mot ; jamais couper
   un mot ; « ... » inséré si une phrase est séparée (FR-003, R5)
-- [ ] T016 [US2] Implémenter le dispositif de séparation des segments dans
+- [x] T016 [US2] Implémenter le dispositif de séparation des segments dans
   `src/txt_metadata/sampling.py` : marqueurs explicites début/fin d'extrait
   entre les deux segments pour que la fin du document ne soit pas lue comme la
   suite hiérarchique du début ; pas de marqueur si texte intégral (FR-004, R5)
@@ -148,29 +148,29 @@ unitaire — citation conforme FR-012.
 
 ### Tests for User Story 3
 
-- [ ] T017 [P] [US_3] Tests unitaires de la validation d'extraction dans
+- [x] T017 [P] [US_3] Tests unitaires de la validation d'extraction dans
   `tests/unit/test_extract.py` : enum 9 valeurs, Titre ≤ 150, champs vides si
   absents, rejet des valeurs invalides, plafond 5 appels
-- [ ] T018 [P] [US_3] Tests unitaires de la citation dans
+- [x] T018 [P] [US_3] Tests unitaires de la citation dans
   `tests/unit/test_citation.py` : composition, guillemets droits, « et al. »
   au-delà de 3 auteurs, ordre d'apparition, référence omise si vide, vide si
   champs insuffisants
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US_3] Durcir le prompt dans `src/txt_metadata/extract.py` :
+- [x] T019 [US_3] Durcir le prompt dans `src/txt_metadata/extract.py` :
   anti-hallucination (ne remplir que ce qui est présent dans l'extrait), schéma
   JSON explicite des 7 clés, définitions des 9 typologies, règles métier auteurs
   (rapporteurs, parlementaires, société/revue) (FR-006 à FR-008, FR-015, R2)
-- [ ] T020 [US_3] Activer le JSON mode dans `src/txt_metadata/extract.py` :
+- [x] T020 [US_3] Activer le JSON mode dans `src/txt_metadata/extract.py` :
   `response_format={"type": "json_object"}` et valider la réponse contre
   `MetadataOutput` ; valeurs invalides → rejouage dans la limite de 5 appels LLM
   par document (FR-017, R2)
-- [ ] T021 [US_3] Implémenter la détection du paragraphe « comment citer » dans
+- [x] T021 [US_3] Implémenter la détection du paragraphe « comment citer » dans
   `src/txt_metadata/citation.py` : si présent, reprise exacte du contenu et du
   format depuis le texte source (recherche locale), et seulement celui-ci
   (FR-011 cas 1, R4)
-- [ ] T022 [US_3] Implémenter la composition déterministe de la citation dans
+- [x] T022 [US_3] Implémenter la composition déterministe de la citation dans
   `src/txt_metadata/citation.py` : `<auteur>, <titre>, <référence>, <éditeur>,
   <date>` (référence omise si vide) ; minuscules sauf noms propres, acronymes,
   initiales ; auteurs dans l'ordre d'apparition, dernier relié par « et » si
@@ -193,23 +193,23 @@ document échoue après retries, lot poursuivi, bilan final, code retour 1.
 
 ### Tests for User Story 4
 
-- [ ] T023 [P] [US4] Tests unitaires de la découverte d'entrées dans
+- [x] T023 [P] [US4] Tests unitaires de la découverte d'entrées dans
   `tests/unit/test_inputs.py` : filtrage `.md`/`.txt`, ignore les autres
   formats, récursivité sous-dossiers, plusieurs dossiers
-- [ ] T024 [P] [US4] Tests unitaires du groupement par lots dans
+- [x] T024 [P] [US4] Tests unitaires du groupement par lots dans
   `tests/unit/test_batch.py` : lots de N, 0 = séquentiel
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Implémenter la découverte des entrées dans
+- [x] T025 [US4] Implémenter la découverte des entrées dans
   `src/txt_metadata/inputs.py` : chemins positionnels (fichiers ou dossiers),
   parcours récursif, filtrage `.md`/`.txt`, silence sur les autres formats,
   détection automatique du mode (FR-001)
-- [ ] T026 [US4] Implémenter le groupement des appels dans
+- [x] T026 [US4] Implémenter le groupement des appels dans
   `src/txt_metadata/batch.py` : requêtes envoyées par lots de taille
   `--taille-batch` (0–100, défaut 25) en parallèle, chaque requête restant un
   appel individuel ; 0 = une par une (FR-020, R1)
-- [ ] T027 [US4] Implémenter la politique d'échec en lot dans
+- [x] T027 [US4] Implémenter la politique d'échec en lot dans
   `src/txt_metadata/__main__.py` : échec définitif → journaliser l'erreur,
   poursuivre, aucun fichier ni numéro consommé pour ce document, bilan final
   (créés/amendés/échecs) via `RunReport`, codes retour 0/1/2 (FR-032, R9)
@@ -229,22 +229,22 @@ haut degré d'assurance, aucune copie dans `output/`, aucun numéro consommé.
 
 ### Tests for User Story 5
 
-- [ ] T028 [P] [US5] Tests unitaires d'appariement dans
+- [x] T028 [P] [US5] Tests unitaires d'appariement dans
   `tests/unit/test_pairing.py` : lien par préfixe 8 caractères normalisés, paire
   unique dans un sous-dossier, non-appariable traité seul
-- [ ] T029 [P] [US5] Tests unitaires d'amendement dans
+- [x] T029 [P] [US5] Tests unitaires d'amendement dans
   `tests/unit/test_amend.py` : champs vides complétés en priorité, champs
   remplis remplacés seulement si haut degré d'assurance, écriture sur place,
   sans numéro
 
 ### Implementation for User Story 5
 
-- [ ] T030 [US5] Implémenter l'appariement texte/JSON dans
+- [x] T030 [US5] Implémenter l'appariement texte/JSON dans
   `src/txt_metadata/inputs.py` : lier un `.md`/`.txt` au JSON dont le nom
   commence par les 8 premiers caractères normalisés du nom de base (espaces →
   `_`, accents simplifiés) ; sinon paire unique du sous-dossier ; sinon texte
   traité seul (FR-027, R7)
-- [ ] T031 [US5] Implémenter l'amendement dans `src/txt_metadata/output.py` :
+- [x] T031 [US5] Implémenter l'amendement dans `src/txt_metadata/output.py` :
   fusion des métadonnées — champs vides complétés en priorité ; champs remplis
   challengés seulement à haut degré d'assurance (typologie validée + cohérence
   des champs adjacents) ; écriture sur place à l'emplacement d'origine, sans
@@ -265,14 +265,14 @@ avant tout traitement.
 
 ### Tests for User Story 6
 
-- [ ] T032 [P] [US6] Tests unitaires de validation des options dans
+- [x] T032 [P] [US6] Tests unitaires de validation des options dans
   `tests/unit/test_cli.py` : alias 8 modèles, `--taille-batch` 0–100,
   `--retry-occurences` 0–10, `--retry-time` 1–10, `--temperature-llm` 0–1, rejet
   explicite hors bornes, code 2
 
 ### Implementation for User Story 6
 
-- [ ] T033 [US6] Implémenter la validation des bornes dans
+- [x] T033 [US6] Implémenter la validation des bornes dans
   `src/txt_metadata/cli.py` : `--choix modèle-llm` (large4, large, medium,
   small, 14b, 8b, 3b, zai → mistral-large-4, mistral-large-latest,
   mistral-medium-latest, mistral-small-latest, ministral-14b-latest,
@@ -280,10 +280,10 @@ avant tout traitement.
   0–100, `--retry-occurences` 0–10, `--retry-time` 1–10, `--output-folder`
   chemin, `--temperature-llm` 0–1 ; hors bornes → message explicite, code 2,
   aucun traitement (FR-028, FR-029, FR-030)
-- [ ] T034 [US6] Brancher les options sur le pipeline dans
+- [x] T034 [US6] Brancher les options sur le pipeline dans
   `src/txt_metadata/__main__.py` : modèle choisi, température, batch, retry
   paramétrés, dossier de sortie personnalisé
-- [ ] T035 [US6] Implémenter la journalisation dans
+- [x] T035 [US6] Implémenter la journalisation dans
   `src/txt_metadata/__main__.py` : progression et erreurs sur stderr, bilan
   final sur stdout, aucune donnée sensible (clé, contenu de document au-delà du
   nécessaire au diagnostic)
@@ -294,13 +294,13 @@ avant tout traitement.
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-- [ ] T036 [P] Documenter l'usage dans `README.md` : installation, commandes,
+- [x] T036 [P] Documenter l'usage dans `README.md` : installation, commandes,
   options, format de sortie, compteur
-- [ ] T037 [P] Revue de conformité constitution : aucun secret ni chemin
+- [x] T037 [P] Revue de conformité constitution : aucun secret ni chemin
   personnel dans le diff, `.gitignore` couvre `.env` et `output/`
-- [ ] T038 Exécuter la validation complète quickstart V1 à V5 et corriger les
+- [x] T038 Exécuter la validation complète quickstart V1 à V5 et corriger les
   écarts
-- [ ] T039 Calibrer sur les 10 exemples (`Interne-Dev/Exemples/`) et produire le
+- [x] T039 Calibrer sur les 10 exemples (`Interne-Dev/Exemples/`) et produire le
   rapport de test dans `specs/001-txt-metadata-extraction/test-report.md` :
   comparaison aux sorties de référence, documentation des divergences attendues
   (`Grand_Continent_article` : « et al. » ; `IFRI` : guillemets droits ;
