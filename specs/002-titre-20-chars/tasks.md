@@ -28,7 +28,7 @@ chaque story livrable et testable indépendamment.
 
 **Purpose**: confirmer le point de départ sur une base verte
 
-- [ ] T001 Exécuter `python -m pytest -q` à la racine et vérifier que les
+- [x] T001 Exécuter `python -m pytest -q` à la racine et vérifier que les
   92 tests existants passent (base de référence avant tout changement)
 
 ---
@@ -37,11 +37,11 @@ chaque story livrable et testable indépendamment.
 
 **Purpose**: découpler nommage et appariement — bloque toutes les stories
 
-- [ ] T002 Dans `src/txt_metadata/output.py`, remplacer la constante
+- [x] T002 Dans `src/txt_metadata/output.py`, remplacer la constante
   `_PREFIX_LENGTH = 8` par `_NAME_PREFIX_LENGTH = 20` (longueur de nommage,
   décision D2 de research.md) et mettre à jour le docstring de
   `output_prefix` ; aucune autre modification
-- [ ] T003 Dans `src/txt_metadata/inputs.py`, introduire les constantes
+- [x] T003 Dans `src/txt_metadata/inputs.py`, introduire les constantes
   d'appariement `_MATCH_MIN = 8` et `_MATCH_MAX = 20` (fenêtre de
   reconnaissance, décision D2) et une fonction utilitaire
   `common_prefix_length(document, json_stem)` calculant le préfixe commun
@@ -64,7 +64,7 @@ troncature à 20, pas de padding pour les noms courts, format
 
 ### Tests for User Story 1
 
-- [ ] T004 [US-1] Mettre à jour les tests de préfixe dans
+- [x] T004 [US-1] Mettre à jour les tests de préfixe dans
   `tests/unit/test_output.py` : `test_prefix_limite_huit_caracteres`
   attend `Rapport_information` pour `Rapport_information.md` (20 caractères,
   underscore compté), `IFRI` pour `IFRI.md` (FR-002, sans padding) ;
@@ -73,10 +73,10 @@ troncature à 20, pas de padding pour les noms courts, format
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US-1] Appliquer la longueur 20 dans `output_prefix`
+- [x] T005 [US-1] Appliquer la longueur 20 dans `output_prefix`
   (`src/txt_metadata/output.py`, dépend de T002) et faire passer
   `tests/unit/test_output.py`
-- [ ] T006 [US-1] Mettre à jour les noms attendus dans
+- [x] T006 [US-1] Mettre à jour les noms attendus dans
   `tests/integration/test_multi.py` : `Troisieme-0003.json` (le nom
   « Troisieme », 9 caractères, n'est plus tronqué) ; vérifier que
   `Deuxieme-0001.json` et `Premier-0002.json` sont inchangés (noms ≤ 8) et
@@ -95,7 +95,7 @@ troncature à 20, pas de padding pour les noms courts, format
 
 ### Tests for User Story 2
 
-- [ ] T007 [US-2] Mettre à jour `tests/unit/test_pairing.py` :
+- [x] T007 [US-2] Mettre à jour `tests/unit/test_pairing.py` :
   `test_appariement_par_prefixe` documente la reconnaissance à partir de 8
   caractères entre le préfixe 20 `Rapport_info` et l'ancien
   `Rapport_-0001.json` ; conserver les tests `paire_unique`,
@@ -103,7 +103,7 @@ troncature à 20, pas de padding pour les noms courts, format
 
 ### Implementation for User Story 2
 
-- [ ] T008 [US-2] Brancher la reconnaissance dans `pair_documents`
+- [x] T008 [US-2] Brancher la reconnaissance dans `pair_documents`
   (`src/txt_metadata/inputs.py`, dépend de T003) : un JSON au format de
   sortie est candidat si `common_prefix_length` >= 8 (ou >= la longueur du
   nom du document si plus court, FR-003) ; candidat unique → apparié ;
@@ -124,19 +124,19 @@ parfaite non liée
 
 ### Tests for User Story 3
 
-- [ ] T009 [P] [US-3] Ajouter dans `tests/unit/test_pairing.py` les tests de
+- [x] T009 [P] [US-3] Ajouter dans `tests/unit/test_pairing.py` les tests de
   départage (FR-004, FR-005, décision D3/D5) : (a) `Rapport info.md` +
   `Rapport_-0001.json` + `Rapport_info-0007.json` → seul le nouveau (12
   caractères partagés) apparié ; (b) nom accentué `Rapport infó-0002.json`
   reconnu après normalisation (décision D4) ; (c) deux candidats à égalité
   parfaite → aucun appariement ; vérifier l'échec avant implémentation
-- [ ] T010 [P] [US-3] Ajouter dans `tests/integration/test_multi.py` un test
+- [x] T010 [P] [US-3] Ajouter dans `tests/integration/test_multi.py` un test
   d'amendement avec coexistence ancien/nouveau JSON (LLM simulé) : le
   nouveau JSON est amendé sur place, l'ancien ignoré, aucun numéro consommé
 
 ### Implementation for User Story 3
 
-- [ ] T011 [US-3] Implémenter la sélection dans `pair_documents`
+- [x] T011 [US-3] Implémenter la sélection dans `pair_documents`
   (`src/txt_metadata/inputs.py`, dépend de T008) : retenir le candidat de
   `common_prefix_length` maximale, égalité parfaite → `paired_json` à
   `None` (document traité seul, FR-005) ; repli « paire unique » inchangé
@@ -150,23 +150,23 @@ parfaite non liée
 
 **Purpose**: conformité documentaire et validation de bout en bout
 
-- [ ] T012 [P] Mettre à jour `README.md` (section Sortie) : « 20 premiers
+- [x] T012 [P] Mettre à jour `README.md` (section Sortie) : « 20 premiers
   caractères du nom du fichier d'entrée, normalisés » + mention de la
   fenêtre d'appariement 8 → 20 dans la section amendement
-- [ ] T013 [P] Amender la spécification 001
+- [x] T013 [P] Amender la spécification 001
   `specs/001-txt-metadata-extraction/spec.md` : FR-022 (8 → 20),
   FR-027 (mention de la fenêtre 8 → 20) et l'entité « Sortie JSON »
   (section Key Entities)
-- [ ] T014 [P] Mettre à jour
+- [x] T014 [P] Mettre à jour
   `specs/001-txt-metadata-extraction/contracts/output-schema.md` : nom du
   fichier sur 20 caractères, conforme à
   `specs/002-titre-20-chars/contracts/naming-and-pairing.md`
-- [ ] T015 Mettre à jour les docstrings d'en-tête de
+- [x] T015 Mettre à jour les docstrings d'en-tête de
   `src/txt_metadata/output.py` et `src/txt_metadata/inputs.py` (règles 20
   caractères et appariement 8 → 20)
-- [ ] T016 Exécuter `python -m pytest -q` (suite complète verte) et
+- [x] T016 Exécuter `python -m pytest -q` (suite complète verte) et
   `pre-commit run --all-files` (lint, secrets, constitution) à la racine
-- [ ] T017 Exécuter la validation de
+- [x] T017 Exécuter la validation de
   `specs/002-titre-20-chars/quickstart.md` : scénarios 1 et 2 (tests
   déterministes), puis scénario 3 sur `Interne-Dev/Exemples/IFRI` avec
   `MISTRAL_API_KEY` (contrainte utilisateur : IFRI uniquement) ; vérifier

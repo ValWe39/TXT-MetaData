@@ -29,9 +29,9 @@ txt-metadata [OPTIONS] CHEMIN...
 
 - `CHEMIN...` : un ou plusieurs fichiers `.md`/`.txt`, ou des dossiers
   (parcourus récursivement). Les formats non attendus sont ignorés.
-- Un dossier contenant déjà un JSON au format de sortie (apparié par le
-  préfixe du nom de fichier, ou paire unique du sous-dossier) est
-  amendé sur place plutôt que recréé.
+- Un dossier contenant déjà un JSON au format de sortie (apparié par
+  préfixe reconnu dès 8 caractères et départagé jusqu'à 20, ou paire
+  unique du sous-dossier) est amendé sur place plutôt que recréé.
 
 Options :
 
@@ -55,8 +55,8 @@ txt-metadata "Interne-Dev/Exemples/IFRI/IFRI.md"
 ## Sortie
 
 Un JSON par document traité, nommé
-`<8 premiers caractères du nom du fichier d'entrée, normalisés>-<numéro>.json`,
-par exemple `Rapport_-0001.json`, contenant :
+`<20 premiers caractères du nom du fichier d'entrée, normalisés>-<numéro>.json`,
+par exemple `Rapport_info-0007.json`, contenant :
 
 - `Typologie` (Article, Rapport, Ouvrage, Cours, Bibliothèque, Extrait,
   Communiqué, Compte-rendu ou Autre) ;
@@ -67,6 +67,11 @@ La numérotation est séquentielle (0001, 0002…, cycle après 9999) et
 persistée dans `counter.txt` à la racine : un numéro consommé n'est
 jamais réutilisé, même en cas d'interruption. Un JSON amendé ne
 consomme pas de numéro.
+
+Un JSON existant est reconnu dès 8 caractères partagés avec le nom du
+document ; l'analyse se prolonge jusqu'à 20 pour retenir le candidat
+le plus proche, et une égalité parfaite laisse le document traité
+seul.
 
 Codes retour : 0 = succès ; 1 = au moins un document en échec (le lot
 se poursuit, un bilan final est affiché) ; 2 = erreur fatale avant

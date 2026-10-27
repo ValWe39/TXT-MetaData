@@ -38,12 +38,12 @@ ci-dessous, toutes présentes (valeurs vides : chaîne vide ou liste vide).
 ## Nommage du fichier de sortie (FR-022)
 
 ```text
-<8 premiers caractères du nom du fichier d'entrée, sans extension>
+<20 premiers caractères du nom du fichier d'entrée, sans extension>
   → espaces remplacées par "_", accents simplifiés (é→e)
 + "-" + numéro d'occurrence à 4 chiffres + ".json"
 ```
 
-Exemple : `Rapport information.md` → `Rapport_-0001.json`.
+Exemple : `Rapport information.md` → `Rapport_information-0001.json`.
 
 ## Numérotation (FR-023 à FR-025)
 

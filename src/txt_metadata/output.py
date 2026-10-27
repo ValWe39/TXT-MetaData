@@ -1,7 +1,7 @@
 """Nommage, écriture et amendement des sorties JSON (FR-021, FR-022,
 FR-026).
 
-Nouveau fichier : ``<8 premiers caractères normalisés du nom d'entrée>-
+Nouveau fichier : ``<20 premiers caractères normalisés du nom d'entrée>-
 <numéro>.json`` dans le dossier de sortie (créé automatiquement).
 Amendement : fusion sur place, sans nouveau numéro ni copie.
 """
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .models import FIELD_ORDER, MetadataOutput, MetadataValidationError
 
-_PREFIX_LENGTH = 8
+_NAME_PREFIX_LENGTH = 20
 
 
 def simplify_accents(text: str) -> str:
@@ -24,12 +24,13 @@ def simplify_accents(text: str) -> str:
 
 
 def output_prefix(input_path: Path) -> str:
-    """8 premiers caractères du nom du fichier (sans extension) :
-    espaces remplacées par ``_``, accents simplifiés (FR-022)."""
+    """20 premiers caractères du nom du fichier (sans extension) :
+    espaces remplacées par ``_``, accents simplifiés (FR-022) ; nom
+    complet si plus court."""
     base = input_path.stem
     base = base.replace(" ", "_")
     base = simplify_accents(base)
-    return base[:_PREFIX_LENGTH]
+    return base[:_NAME_PREFIX_LENGTH]
 
 
 def build_output_name(input_path: Path, occurrence: str) -> str:
