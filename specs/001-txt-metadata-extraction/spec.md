@@ -361,7 +361,7 @@ emplacement de sortie).
   créé automatiquement par l'outil s'il n'existe pas, sans demande de
   confirmation, et recevoir toutes les nouvelles sorties (sauf override par
   `--output-folder`).
-- **FR-022**: Le nom du fichier de sortie DOIT être : 8 premiers caractères du
+- **FR-022**: Le nom du fichier de sortie DOIT être : 20 premiers caractères du
   titre du fichier d'entrée (espaces remplacés par `_`, accents simplifiés) +
   `-` + numéro d'occurrence à 4 chiffres + `.json`.
 - **FR-023**: Le numéro d'occurrence DOIT être attribué séquentiellement à
@@ -380,8 +380,10 @@ emplacement de sortie).
   haut degré d'assurance. L'amendement DOIT être écrit sur place, à
   l'emplacement d'origine du JSON, sans créer de copie dans le dossier de
   sortie.
-- **FR-027**: L'appariement texte/JSON DOIT se faire par le titre de fichier ou
-  par unicité de la paire dans un sous-dossier ; les textes non appariables sont
+- **FR-027**: L'appariement texte/JSON DOIT se faire par le titre de fichier
+  (reconnaissance dès 8 caractères partagés, analyse prolongée jusqu'à 20,
+  candidat le plus proche retenu, égalité parfaite non liée) ou par unicité
+  de la paire dans un sous-dossier ; les textes non appariables sont
   traités comme éléments seuls.
 
 #### Interface
@@ -411,7 +413,7 @@ emplacement de sortie).
   l'analyse ; porte un dispositif de séparation des deux segments.
 - **Métadonnées**: ensemble des champs extraits (Typologie obligatoire ;
   Auteur(s), Titre, Editeur, Date, Référence, Citation optionnels).
-- **Sortie JSON**: document produit, nommé `<8 premiers caractères du
+- **Sortie JSON**: document produit, nommé `<20 premiers caractères du
   titre>-<numéro d'occurrence 4 chiffres>.json`, stocké dans le dossier de
   sortie ; peut préexister et être amendée.
 - **Compteur d'occurrence**: fichier texte à la racine de l'outil contenant

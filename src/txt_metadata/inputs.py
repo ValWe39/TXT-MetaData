@@ -2,8 +2,8 @@
 
 Multi-entrées transparent : fichiers `.md`/`.txt`, dossiers parcourus
 récursivement (sous-dossiers inclus), formats inattendus ignorés
-silencieusement. Appariement : par préfixe de 8 caractères normalisés,
-ou paire unique dans un sous-dossier.
+silencieusement. Appariement : par préfixe reconnu dès 8 caractères
+normalisés et départagé jusqu'à 20, ou paire unique dans un sous-dossier.
 """
 
 from __future__ import annotations
@@ -11,9 +11,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from .output import load_existing, output_prefix
+from .output import load_existing, output_prefix, simplify_accents
 
 SUPPORTED_EXTENSIONS = {".md", ".txt"}
+
+_MATCH_MIN = 8
+_MATCH_MAX = 20
 
 
 @dataclass
@@ -57,11 +60,28 @@ def discover(paths: list[Path]) -> list[InputDocument]:
     return [InputDocument(path=p) for p in _iter_supported(paths)]
 
 
+def common_prefix_length(document: InputDocument, json_stem: str) -> int:
+    """Préfixe commun le plus long entre le nom normalisé du document et
+    le nom du JSON (normalisé : espaces remplacées par ``_``, accents
+    simplifiés), plafonné à ``_MATCH_MAX`` caractères (FR-004)."""
+    stem = simplify_accents(json_stem.replace(" ", "_"))
+    name = output_prefix(document.path)
+    length = 0
+    for char_doc, char_json in zip(name, stem):
+        if char_doc != char_json:
+            break
+        length += 1
+        if length >= _MATCH_MAX:
+            break
+    return length
+
+
 def pair_documents(documents: list[InputDocument]) -> None:
     """Apparie chaque document à un JSON de sortie existant (FR-027).
 
-    Priorité : préfixe de 8 caractères normalisés unique ; sinon paire
-    unique du sous-dossier ; sinon document traité seul.
+    Priorité : candidats reconnus dès 8 caractères normalisés, départagés
+    par le préfixe commun le plus long (jusqu'à 20) ; sinon paire unique
+    du sous-dossier ; sinon document traité seul.
     """
     by_dir: dict[Path, list[InputDocument]] = {}
     for doc in documents:
@@ -73,10 +93,19 @@ def pair_documents(documents: list[InputDocument]) -> None:
             if load_existing(candidate) is not None
         ]
         for doc in docs:
-            prefix = output_prefix(doc.path)
-            matches = [j for j in jsons if j.stem.startswith(prefix)]
+            name = output_prefix(doc.path)
+            threshold = min(_MATCH_MIN, len(name))
+            candidates = [(common_prefix_length(doc, j.stem), j) for j in jsons]
+            matches = [(length, j) for length, j in candidates if length >= threshold]
             if len(matches) == 1:
-                doc.paired_json = matches[0]
+                doc.paired_json = matches[0][1]
+            elif len(matches) > 1:
+                # FR-004 : le candidat le plus proche est retenu ; en cas
+                # d'égalité parfaite, le document est traité seul (FR-005)
+                best = max(length for length, _ in matches)
+                best_matches = [j for length, j in matches if length == best]
+                if len(best_matches) == 1:
+                    doc.paired_json = best_matches[0]
             elif len(docs) == 1 and len(jsons) == 1:
                 doc.paired_json = jsons[0]
 

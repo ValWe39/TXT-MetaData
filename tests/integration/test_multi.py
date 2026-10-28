@@ -76,7 +76,7 @@ def test_multi_entrees_numerotation_sequentielle(isolated_run):
     assert code == 0
     # ordre de traitement déterministe (tri) : Deuxieme, Premier, Troisieme
     outputs = sorted(p.name for p in output_dir.glob("*.json"))
-    assert outputs == ["Deuxieme-0001.json", "Premier-0002.json", "Troisiem-0003.json"]
+    assert outputs == ["Deuxieme-0001.json", "Premier-0002.json", "Troisieme-0003.json"]
     counter = (tmp_path / "counter.txt").read_text(encoding="utf-8")
     assert counter == "0003"
 
@@ -105,6 +105,38 @@ def test_amendement_sur_place_sans_numero(isolated_run):
     assert not output_dir.exists()
     assert not (tmp_path / "counter.txt").exists()
     assert existing.name == "Rapport-0005.json"
+
+
+def test_amendement_coexistence_ancien_nouveau(isolated_run):
+    run, tmp_path = isolated_run
+    doc = tmp_path / "Rapport info.md"
+    doc.write_text("Titre extrait dans le texte du document.", encoding="utf-8")
+    ancien = tmp_path / "Rapport_-0005.json"
+    ancien.write_text(
+        json.dumps({"Typologie": "Rapport", "Editeur": "Ancien"}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    nouveau = tmp_path / "Rapport_info-0007.json"
+    nouveau.write_text(
+        json.dumps({"Typologie": "Rapport", "Editeur": "Nouveau"}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    output_dir = tmp_path / "sortie"
+    code = run(
+        [str(tmp_path), "--output-folder", str(output_dir), "--retry-occurences", "0"],
+        FakeClient(RESPONSE),
+    )
+    assert code == 0
+    # le nouveau JSON (12 caractères partagés) est amendé sur place
+    data = json.loads(nouveau.read_text(encoding="utf-8"))
+    assert data["Titre"] == "Titre extrait"
+    assert data["Editeur"] == "Nouveau"
+    # l'ancien (8 caractères partagés) est ignoré, inchangé
+    ancien_data = json.loads(ancien.read_text(encoding="utf-8"))
+    assert ancien_data == {"Typologie": "Rapport", "Editeur": "Ancien"}
+    # aucun numéro consommé, aucune sortie dans le dossier
+    assert not output_dir.exists()
+    assert not (tmp_path / "counter.txt").exists()
 
 
 def test_echec_en_lot_le_lot_poursuit(isolated_run, capsys):

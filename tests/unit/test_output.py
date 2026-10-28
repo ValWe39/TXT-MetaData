@@ -19,18 +19,18 @@ from txt_metadata.output import (
 
 def test_prefix_espaces_et_accents():
     path = Path("première séance du vendredi.md")
-    assert output_prefix(path) == "premiere"
+    assert output_prefix(path) == "premiere_seance_du_v"
 
 
-def test_prefix_limite_huit_caracteres():
+def test_prefix_limite_vingt_caracteres():
     # l'underscore issu d'une espace compte comme un caractère
-    assert output_prefix(Path("Rapport_information.md")) == "Rapport_"
+    assert output_prefix(Path("Rapport_information.md")) == "Rapport_information"
     assert output_prefix(Path("IFRI.md")) == "IFRI"
 
 
 def test_nom_de_sortie():
     name = build_output_name(Path("Mon dossier/Rapport info.md"), "0007")
-    assert name == "Rapport_-0007.json"
+    assert name == "Rapport_info-0007.json"
 
 
 def test_ecriture_nouvelle_sortie(tmp_path):

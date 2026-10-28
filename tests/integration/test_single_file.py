@@ -82,7 +82,7 @@ def test_fichier_unique_v1(isolated_run):
     assert counter_file.read_text(encoding="utf-8") == "0001"
     outputs = list(output_dir.glob("*.json"))
     assert len(outputs) == 1
-    assert outputs[0].name == "Rapport_-0001.json"
+    assert outputs[0].name == "Rapport_exemple-0001.json"
     data = json.loads(outputs[0].read_text(encoding="utf-8"))
     assert data["Typologie"] == "Rapport"
     assert data["Auteur(s)"] == ["Anne Rapporteuse"]
